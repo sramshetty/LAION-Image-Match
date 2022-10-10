@@ -1,26 +1,6 @@
 import torch
 from torch.utils.data import Dataset
 import pandas as pd
-from transformers import AutoProcessor, AutoModel
-from PIL import Image
-
-
-processor = AutoProcessor.from_pretrained("laion/CLIP-ViT-H-14-laion2B-s32B-b79K")
-model = AutoModel.from_pretrained("laion/CLIP-ViT-H-14-laion2B-s32B-b79K")
-
-
-def collate_fn(batch):
-    features = []
-    labels = []
-    for x, label in batch:
-        imgs = [Image.open(path) for path in x]
-        inputs = processor(images=imgs, return_tensors='pt')
-        
-        features.append(model.get_image_features(**inputs).unsqueeze(0))
-        labels += [1] if label else [0]
-
-    return torch.cat(features), labels
-
 
 class AboSpinsDataset(Dataset):
 
